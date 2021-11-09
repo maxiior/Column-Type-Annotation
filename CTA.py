@@ -6,10 +6,6 @@ import re
 import pathlib
 import time
 
-word = '(aaaa)'
-word = re.sub('(\(|\[).*(\)|\])', '', word)
-print(word)
-
 target_dir = './dataset/Round1/targets'
 gt_dir = './dataset/Round1/gt'
 TABLES_FOLDER_DIR = str(pathlib.Path(
