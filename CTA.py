@@ -6,12 +6,8 @@ import re
 import pathlib
 import time
 
-word = '(aaaa)'
-word = re.sub('(\(|\[).*(\)|\])', '', word)
-print(word)
+target_dir = 'CTA_DBP_Round1_Targets'
 
-target_dir = './dataset/Round1/targets'
-gt_dir = './dataset/Round1/gt'
 TABLES_FOLDER_DIR = str(pathlib.Path(
     __file__).parent.resolve()) + '\\tables'
 
@@ -34,8 +30,7 @@ def preporcess_item(word):
     word = re.sub('(^_|_$)', '', word)
     return word
 
-
-column_items = []
+# Wyjmujemy poszczególne kolumny z określonych tabel i umieszczamy jes w column_items
 
 
 def get_column_items(row):
@@ -43,8 +38,8 @@ def get_column_items(row):
     table_id = row["table_id"]
     column_id = row["column_id"]
 
-    print(TABLES_FOLDER_DIR + "\\" + table_id + ".csv")
     df = pd.read_csv(TABLES_FOLDER_DIR + "\\" + table_id + ".csv")
+
     cells = []
     column = df.iloc[:, column_id]
 
@@ -54,9 +49,7 @@ def get_column_items(row):
             cells.append(value)
     column_items.append(cells)
 
-
-for i in df_targets.iloc:
-    get_column_items(i)
+# Pobieramy klasy określające daną komórkę
 
 
 def get_ontology_classes(item):
@@ -73,26 +66,44 @@ def get_ontology_classes(item):
 
     respond.append([result["type"]["value"] for result in results["results"]["bindings"]
                     if 'http://dbpedia.org/ontology' in result["type"]["value"]])
+    time.sleep(0.3)
 
     return respond
 
 
-items_classes = []
+if __name__ == '__main__':
+    column_items = []
 
-for column in column_items:
-    item_classes = []
-    for item in column:
-        item_classes.append(get_ontology_classes(item))
-    items_classes.append(item_classes)
+    for i in df_targets.iloc:
+        get_column_items(i)
 
-items_classes_df = pd.DataFrame(columns=['item', 'classes'])
+    print("Wyjmowanie komórek z kolumn: DONE")
 
-for items in items_classes:
-    res = [items[i] for i in (0, -1)]
-    items_classes_df = items_classes_df.append({'item': res[0], 'classes': ";".join(
-        map((lambda x: '"' + str(x) + '"'), res[1]))}, ignore_index=True)
+    items_classes = []
 
-mask = (items_classes_df['classes'] == '')
-items_classes_df['classes'][mask] = '"' + items_classes_df['item'] + '"'
+    q = 0
+    for column in column_items:
+        item_classes = []
+        q += 1
+        if q % 40 == 0:
+            time.sleep(30)
+        print(q, '/', len(column_items))
+        for item in column:
+            item_classes.append(get_ontology_classes(item))
+            items_classes.append(item_classes)
 
-items_classes_df.to_csv('items_classes_df_p.csv', index=False)
+    # print("Pobieranie klas dla komórek: DONE")
+
+    # Tworzymy DataFrame, w którym dla każdego itemu przypiszemy pobrane klasy
+    items_classes_df = pd.DataFrame(columns=['item', 'classes'])
+
+    for items in items_classes:
+        res = [items[i] for i in (0, -1)]
+        items_classes_df = items_classes_df.append({'item': res[0], 'classes': ";".join(
+            map((lambda x: '"' + str(x) + '"'), res[1]))}, ignore_index=True)
+
+    mask = (items_classes_df['classes'] == '')
+    items_classes_df['classes'][mask] = '"' + \
+        str(items_classes_df['item']) + '"'
+
+    items_classes_df.to_csv('items_classes_df_p.csv', index=False)
