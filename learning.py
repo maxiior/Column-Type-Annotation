@@ -46,7 +46,7 @@ for i in range(len(testds)):
     owngtcsvs.add(testowe["csv"])
 
 
-with open("CTA_DBP_Round1.csv", encoding="utf8") as f:
+with open("answears.csv", encoding="utf8") as f:
     with open("CTA_Round1_gt_own.csv", "w", encoding="utf8") as f2:
         csvwriter = csv.writer(f2)
         csvreader = csv.reader(f)

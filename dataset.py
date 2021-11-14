@@ -7,9 +7,6 @@ df = df.drop_duplicates(subset=["text"])
 
 classes = list(df.columns.values[3:-1])
 
-print(len(classes))
-input()
-
 rozklad = Counter()
 
 # Ustalamy rozkład przynajleżności do poszczególnych klas

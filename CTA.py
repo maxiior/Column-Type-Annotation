@@ -1,12 +1,9 @@
 from SPARQLWrapper import SPARQLWrapper, JSON
 import pandas as pd
 import numpy as np
-import os
 import re
 import pathlib
 import time
-
-target_dir = 'CTA_DBP_Round1_Targets'
 
 TABLES_FOLDER_DIR = str(pathlib.Path(
     __file__).parent.resolve()) + '\\tables'
@@ -16,9 +13,8 @@ TARGETS_FILE_NAME = str(pathlib.Path(
 
 df_targets = pd.read_csv(TARGETS_FILE_NAME,
                          header=None,
-                         nrows=540,
-                         names=['table_id', 'column_id'],
-                         dtype={'column_id': np.int8})
+                         names=['names', 'position'],
+                         dtype={'position': np.int8})
 
 
 def preporcess_item(word):
@@ -35,13 +31,13 @@ def preporcess_item(word):
 
 def get_column_items(row):
     global column_items
-    table_id = row["table_id"]
-    column_id = row["column_id"]
+    name = row["names"]
+    position = row["position"]
 
-    df = pd.read_csv(TABLES_FOLDER_DIR + "\\" + table_id + ".csv")
+    df = pd.read_csv(TABLES_FOLDER_DIR + "\\" + name + ".csv")
 
     cells = []
-    column = df.iloc[:, column_id]
+    column = df.iloc[:, position]
 
     for _, value in column.items():
         value = preporcess_item(str(value))
@@ -71,6 +67,14 @@ def get_ontology_classes(item):
     return respond
 
 
+def get_size(column_items):
+    q = 0
+    for column in column_items:
+        for _ in column:
+            q += 1
+    print('size: ', q, '(~', str(round(q*0.8/60)), 'min)')
+
+
 if __name__ == '__main__':
     column_items = []
 
@@ -80,6 +84,8 @@ if __name__ == '__main__':
     print("Wyjmowanie komórek z kolumn: DONE")
 
     items_classes = []
+
+    get_size(column_items)
 
     q = 0
     for column in column_items:
@@ -92,7 +98,7 @@ if __name__ == '__main__':
             item_classes.append(get_ontology_classes(item))
             items_classes.append(item_classes)
 
-    # print("Pobieranie klas dla komórek: DONE")
+    print("Pobieranie klas dla komórek: DONE")
 
     # Tworzymy DataFrame, w którym dla każdego itemu przypiszemy pobrane klasy
     items_classes_df = pd.DataFrame(columns=['item', 'classes'])
