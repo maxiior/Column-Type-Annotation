@@ -4,20 +4,18 @@ import numpy as np
 import re
 import pathlib
 import time
+import ssl
+ssl._create_default_https_context = ssl._create_unverified_context
+
+column_items = []
 
 TABLES_FOLDER_DIR = str(pathlib.Path(
     __file__).parent.resolve()) + '\\tables'
 
 TARGETS_FILE_NAME = str(pathlib.Path(
-    __file__).parent.resolve()) + '\\CTA_DBP_Round1_Targets.csv'
+    __file__).parent.resolve()) + '\\definitive_files.csv'
 
-df_targets = pd.read_csv(TARGETS_FILE_NAME,
-                         header=None,
-                         names=['names', 'position'],
-                         dtype={'position': np.int8})
-
-
-def preporcess_item(word):
+def preporcess(word):
     word = re.sub(' \*? ?(A|a)lso.*', '', word)
     word = re.sub('(\(|\[).*(\)|\])', '', word)
     word = re.sub('[^A-Za-z0-9 \-\d+/\d+\?]+', '', word)
@@ -31,16 +29,15 @@ def preporcess_item(word):
 
 def get_column_items(row):
     global column_items
-    name = row["names"]
+    name = row["name"]
     position = row["position"]
 
     df = pd.read_csv(TABLES_FOLDER_DIR + "\\" + name + ".csv")
-
     cells = []
     column = df.iloc[:, position]
 
     for _, value in column.items():
-        value = preporcess_item(str(value))
+        value = preporcess(str(value))
         if not (pd.isna(value)):
             cells.append(value)
     column_items.append(cells)
@@ -62,7 +59,7 @@ def get_ontology_classes(item):
 
     respond.append([result["type"]["value"] for result in results["results"]["bindings"]
                     if 'http://dbpedia.org/ontology' in result["type"]["value"]])
-    time.sleep(0.3)
+    time.sleep(0.32)
 
     return respond
 
@@ -75,30 +72,30 @@ def get_size(column_items):
     print('size: ', q, '(~', str(round(q*0.8/60)), 'min)')
 
 
-if __name__ == '__main__':
-    column_items = []
+def get_items_classes():
+    df_targets = pd.read_csv(TARGETS_FILE_NAME,
+                        header=None,
+                        names=['name', 'position'],
+                        dtype={'position': np.int8})
 
     for i in df_targets.iloc:
         get_column_items(i)
-
-    print("Wyjmowanie komórek z kolumn: DONE")
+    get_size(column_items)
+    print("Wyjmowanie komórek z kolumn: DONE\n")
 
     items_classes = []
-
-    get_size(column_items)
-
     q = 0
     for column in column_items:
         item_classes = []
         q += 1
-        if q % 40 == 0:
+        if q % 15 == 0:
             time.sleep(30)
         print(q, '/', len(column_items))
         for item in column:
             item_classes.append(get_ontology_classes(item))
-            items_classes.append(item_classes)
+        items_classes.append(item_classes)
 
-    print("Pobieranie klas dla komórek: DONE")
+    print("Pobieranie klas dla poszczególnych komórek kolumn: DONE\n")
 
     # Tworzymy DataFrame, w którym dla każdego itemu przypiszemy pobrane klasy
     items_classes_df = pd.DataFrame(columns=['item', 'classes'])
@@ -112,4 +109,4 @@ if __name__ == '__main__':
     items_classes_df['classes'][mask] = '"' + \
         str(items_classes_df['item']) + '"'
 
-    items_classes_df.to_csv('items_classes_df_p.csv', index=False)
+    items_classes_df.to_csv('items_classes.csv', index=False)

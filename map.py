@@ -1,17 +1,5 @@
 import pandas as pd
 
-df = pd.read_csv("items_classes_df_p.csv")
-
-df = df.fillna("")
-
-classes_translated = {}
-for cc, row in df.iterrows():
-    classes_translated[row["item"]] = row["classes"]
-
-dane = pd.read_csv("glove.csv")
-dane = dane.fillna("")
-
-
 def process_data(text, classes_translated):
     splt = text.split('";"')
     toret = []
@@ -47,12 +35,19 @@ def process_data(text, classes_translated):
             newitem = newitem.replace(
                 "http://dbpedia.org/ontology/", "").replace("_", " ")
         toret.append(newitem)
-
     return toret
 
+def map_items():
+    df = pd.read_csv("items_classes.csv")
+    df = df.fillna("")
 
-dane["text_dbpedied"] = dane["text"].apply(
-    lambda x: " ; ".join(process_data(x, classes_translated)))
-dane.to_csv("glove_df_dbpedied_p.csv")
+    classes_translated = {}
+    for _, row in df.iterrows():
+        classes_translated[row["item"]] = row["classes"]
 
-dane.to_csv("glove_df_dbpedied_p.csv")
+    data = pd.read_csv("dataset.csv")
+    data = data.fillna("")
+
+    data["text_dbpedied"] = data["text"].apply(
+        lambda x: " ; ".join(process_data(x, classes_translated)))
+    data.to_csv("dataset_dbpedied.csv")
