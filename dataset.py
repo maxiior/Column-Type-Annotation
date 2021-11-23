@@ -2,21 +2,23 @@ import pandas as pd
 import numpy as np
 from collections import Counter
 
+
 def create_train_test_dataset():
     df = pd.read_csv("dataset_dbpedied.csv")
     df = df.drop_duplicates(subset=["text"])
+    df = df.drop(["text"], axis=1)
 
-    classes = list(df.columns.values[3:-1])
-    rozklad = Counter()
+    classes = list(df.columns.values[3:-2])
+    schedule = Counter()
 
     # Ustalamy rozkład przynajleżności do poszczególnych klas
-    for cc, row in df.iterrows():
+    for _, row in df.iterrows():
         c = classes[np.array(row[classes]).argmax()]
-        rozklad[c] += 1
+        schedule[c] += 1
 
     # Szukamy klas, które wystąpiły tylko raz
     onlyOnce = []
-    rev = reversed(rozklad.most_common())
+    rev = reversed(schedule.most_common())
     for item in rev:
         if item[1] == 1:
             onlyOnce.append(item[0])
@@ -32,23 +34,22 @@ def create_train_test_dataset():
     for cc, row in df.iterrows():
         c = classes[np.array(row[classes]).argmax()]
         if row[c] == 1:
-            if row_test_c[c] < int(0.2*rozklad[c])+1:
+            if row_test_c[c] < int(0.3*schedule[c])+1:
                 row_test_c[c] += 1
                 row_test.append(cc)
 
-
-    testds = pd.DataFrame()
+    test = pd.DataFrame()
     for row in row_test:
-        testds = testds.append(df.loc[row])
-    testds = testds.drop(columns=["Unnamed: 0"])
-    testds[classes] = testds[classes].astype(int)
+        test = test.append(df.loc[row])
+    test[classes] = test[classes].astype(int)
+    test["position"] = test["position"].astype(int)
 
-    trainds = pd.DataFrame()
+    train = pd.DataFrame()
     for row in range(len(df)):
         if row not in row_test:
-            trainds = trainds.append(df.iloc[row])
-    trainds = trainds.drop(columns=["Unnamed: 0"])
-    trainds[classes] = trainds[classes].astype(int)
+            train = train.append(df.iloc[row])
+    train[classes] = train[classes].astype(int)
+    train["position"] = train["position"].astype(int)
 
-    testds.to_csv("test_p.csv")
-    trainds.to_csv("train_p.csv")
+    test.to_csv("test_p.csv", index=False)
+    train.to_csv("train_p.csv", index=False)
