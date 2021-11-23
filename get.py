@@ -1,5 +1,6 @@
 import pandas as pd
 
+
 def get_files_of_size(MAX_FILE_SIZE=1000000):
     files = pd.read_csv("CTA_DBP_Round1_Targets.csv")
     definitive_files = pd.DataFrame(columns=['name', 'position'])
@@ -18,43 +19,28 @@ def get_files_of_size(MAX_FILE_SIZE=1000000):
 
 
 def get_classes_for_files_columns():
-    definitive_files = pd.read_csv("definitive_files.csv")
     items_classes = pd.read_csv("items_classes.csv")
 
     classes_that_work = [i['class'].lower() for i in items_classes.iloc]
 
-    tmp_definitive_files = pd.DataFrame()
-
-    for i in definitive_files.iloc:
-        for j in items_classes.iloc:
-            if i['position'] == j['position'] and i['name'] == j['name']:
-                tmp_definitive_files = tmp_definitive_files.append(
-                    {'name': j['name'], 'position': str(int(j['position'])), 'class': j['class']}, ignore_index=True)
-
-    definitive_files = tmp_definitive_files
-    definitive_files.to_csv("definitive_files.csv", index=False)
-    
-    # Zapisujemy kolumny, które wykorzystamy w datasecie csv
-    columns = ['csv', 'text']
-    for i in list(dict.fromkeys(classes_that_work)):
-        columns.append(i)
-
     print('Liczba wierszy definitive_files.csv: ',
-          definitive_files['name'].size)
+          items_classes['name'].size)
 
-    df = pd.DataFrame(columns=columns)
+    df = pd.DataFrame()
 
-    for i in definitive_files.iloc:
+    for i in items_classes.iloc:
         csv = pd.read_csv("tables\\" + i['name'] + ".csv")
         s = ""
 
-        for k, j in enumerate(csv[csv.columns.tolist()[int(i['position'])]]):
-            if k == len(csv[csv.columns.tolist()[int(i['position'])]]) - 1:
+        column = csv[csv.columns.tolist()[int(i['position'])]]
+        for k, j in enumerate(column):
+            if k == len(column) - 1:
                 s += "\"" + str(j) + "\""
             else:
                 s += "\"" + str(j) + "\";"
 
-        row = {'csv': i['name'], 'position': str(int(i['position'])), 'text': s}
+        row = {'csv': i['name'], 'position': str(
+            int(i['position'])), 'text': s}
 
         for j in classes_that_work:
             if i['class'].lower() == j.lower():

@@ -1,4 +1,7 @@
-CTRL_WIKI_BUS_largest_employers,0,http://dbpedia.org/ontology/agent
-CTRL_WIKI_BUS_largest_private_and_semiprivate_employers,1,http://dbpedia.org/ontology/agent
-CTRL_WIKI_BUS_largest_private_and_semiprivate_employers,2,http://dbpedia.org/ontology/agent
-TOUGH_T2D_POL_1438042986423_95_20150728002306-00125-ip-10-236-191-2_88435628_5___parties,0,http://dbpedia.org/ontology/politicalparty
+CTRL_WIKI_BUS_largest_employers,0,http://dbpedia.org/ontology/organisation
+CTRL_WIKI_BUS_largest_employers,3,http://dbpedia.org/ontology/populatedplace
+CTRL_WIKI_BUS_largest_employers_NOISE2,3,http://dbpedia.org/ontology/populatedplace
+CTRL_WIKI_BUS_largest_private_and_semiprivate_employers,1,http://dbpedia.org/ontology/organisation
+CTRL_WIKI_BUS_largest_private_and_semiprivate_employers,2,http://dbpedia.org/ontology/organisation
+TOUGH_WEB_HOMO_music_artists,0,http://dbpedia.org/ontology/musicalwork
+TOUGH_WEB_HOMO_soccer_players,1,http://dbpedia.org/ontology/organisation

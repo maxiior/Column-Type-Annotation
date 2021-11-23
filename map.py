@@ -4,7 +4,7 @@ REPLACE = [".", ":", "'", "-", "/", "?", "*", ",", "&",
            "(", ")", "!", "[", "]", "=", ">", "+", ";", '"']
 
 
-def process_data(text):
+def preprocess(text):
     splt = text.split('";"')
     toret = []
     for item in splt:
@@ -21,5 +21,8 @@ def map_items():
     data = pd.read_csv("dataset.csv")
     data = data.fillna("")
     data["text_dbpedied"] = data["text"].apply(
-        lambda x: " ; ".join(process_data(x)))
+        lambda x: " ; ".join(preprocess(x)))
+    data = data.drop_duplicates(subset=["text"])
+    data = data.drop(["text"], axis=1)
     data.to_csv("dataset_dbpedied.csv", index=False)
+    print("Mapowanie: DONE")

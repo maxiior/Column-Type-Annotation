@@ -5,10 +5,8 @@ from collections import Counter
 
 def create_train_test_dataset():
     df = pd.read_csv("dataset_dbpedied.csv")
-    df = df.drop_duplicates(subset=["text"])
-    df = df.drop(["text"], axis=1)
 
-    classes = list(df.columns.values[1:-2])
+    classes = list(df.columns.values[2:-1])
     schedule = Counter()
 
     # Ustalamy rozkład przynajleżności do poszczególnych klas
@@ -53,3 +51,5 @@ def create_train_test_dataset():
 
     test.to_csv("test_p.csv", index=False)
     train.to_csv("train_p.csv", index=False)
+
+    print("Tworzenie zbioru treningowego i testowego: DONE")

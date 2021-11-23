@@ -9,8 +9,6 @@ def get_efficiency():
     for i in submission.iloc:
         all += 1
 
-    answear = pd.DataFrame()
-
     correct = 0
 
     for i in submission.iloc:
