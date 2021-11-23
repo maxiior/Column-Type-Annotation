@@ -25,8 +25,6 @@ def train_and_test_process():
     x_train = vectorizer.fit_transform(trainds['text_dbpedied'])
     y_train = np.array([np.array(item).argmax()
                         for _, item in trainds[classes].iterrows()]).reshape(-1, 1)
-    
-    print(y_train)
 
     rfc = RandomForestClassifier()
     model = rfc.fit(x_train, y_train)
