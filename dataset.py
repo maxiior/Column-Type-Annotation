@@ -8,7 +8,7 @@ def create_train_test_dataset():
     df = df.drop_duplicates(subset=["text"])
     df = df.drop(["text"], axis=1)
 
-    classes = list(df.columns.values[3:-2])
+    classes = list(df.columns.values[1:-2])
     schedule = Counter()
 
     # Ustalamy rozkład przynajleżności do poszczególnych klas

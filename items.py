@@ -4,13 +4,19 @@ import numpy as np
 import re
 import pathlib
 import time
+import os, ssl
+
+if (not os.environ.get('PYTHONHTTPSVERIFY', '') and
+getattr(ssl, '_create_unverified_context', None)):
+    ssl._create_default_https_context = ssl._create_unverified_context
 
 TABLES_FOLDER_DIR = str(pathlib.Path(
     __file__).parent.resolve()) + '\\tables'
 
 TARGETS_FILE_NAME = str(pathlib.Path(
-    __file__).parent.resolve()) + '\\CTA_DBP_Round1_Targets.csv'
+    __file__).parent.resolve()) + '\\definitive_files.csv'
 
+column_items = []
 
 def preporcess_item(word):
     word = re.sub(' \*? ?(A|a)lso.*', '', word)
@@ -26,7 +32,7 @@ def preporcess_item(word):
 
 def get_column_items(row):
     global column_items
-    name = row["names"]
+    name = row["name"]
     position = row["position"]
 
     df = pd.read_csv(TABLES_FOLDER_DIR + "\\" + name + ".csv")
@@ -34,15 +40,15 @@ def get_column_items(row):
     cells = []
     column = df.iloc[:, position]
 
-    if len(column) < 100:
-        for _, value in column.items():
-            value = preporcess_item(str(value))
-            if not (pd.isna(value)):
-                cells.append(value)
-        items = dict()
-        items['name'] = name
-        items['items'] = cells
-        column_items.append(items)
+    for _, value in column.items():
+        value = preporcess_item(str(value))
+        if not (pd.isna(value)):
+            cells.append(value)
+    items = dict()
+    items['name'] = name
+    items['position'] = position
+    items['items'] = cells
+    column_items.append(items)
 
 # Pobieramy klasy określające daną komórkę
 
@@ -74,13 +80,8 @@ def get_size(column_items):
     print('size: ', q, '(~', str(round(q*0.8/60)), 'min)')
 
 
-if __name__ == '__main__':
-    column_items = []
-
-    df_targets = pd.read_csv(TARGETS_FILE_NAME,
-                             header=None,
-                             names=['names', 'position'],
-                             dtype={'position': np.int8})
+def get_items_classes():
+    df_targets = pd.read_csv(TARGETS_FILE_NAME)
 
     for i in df_targets.iloc:
         get_column_items(i)
@@ -95,7 +96,8 @@ if __name__ == '__main__':
     for column in column_items:
         item_classes = dict()
         item_classes['name'] = column['name']
-        item_classes['classes'] = []
+        item_classes['position'] = column['position']
+        item_classes['class'] = []
 
         q += 1
         if q % 40 == 0:
@@ -105,25 +107,23 @@ if __name__ == '__main__':
         for item in column['items']:
             tmp = get_ontology_classes(item)[0]
             for i in tmp:
-                item_classes['classes'].append(i)
-        item_classes['classes'] = max(
-            set(item_classes['classes']), key=item_classes['classes'].count)
+                item_classes['class'].append(i)
+        try:
+            item_classes['class'] = max(
+                set(item_classes['class']), key=item_classes['class'].count)
+        except:
+            item_classes['class'] = None
         items_classes.append(item_classes)
-        print(items_classes)
-        input()
 
-    # print("Pobieranie klas dla komórek: DONE")
+        tmp = []
+        for i in items_classes:
+            if i['class'] != None:
+                tmp.append(i)
 
-    # # Tworzymy DataFrame, w którym dla każdego itemu przypiszemy pobrane klasy
-    # items_classes_df = pd.DataFrame(columns=['item', 'classes'])
+        items_classes = tmp
 
-    # for items in items_classes:
-    #     res = [items[i] for i in (0, -1)]
-    #     items_classes_df = items_classes_df.append({'item': res[0], 'classes': ";".join(
-    #         map((lambda x: '"' + str(x) + '"'), res[1]))}, ignore_index=True)
+    print("Pobieranie klas dla komórek: DONE")
 
-    # mask = (items_classes_df['classes'] == '')
-    # items_classes_df['classes'][mask] = '"' + \
-    #     str(items_classes_df['item']) + '"'
-
-    # items_classes_df.to_csv('items_classes_df_p.csv', index=False)
+    #Tworzymy DataFrame, w którym dla każdego itemu przypiszemy pobrane klasy
+    items_classes_df = pd.DataFrame.from_dict(items_classes)
+    items_classes_df.to_csv('items_classes.csv', index=False)

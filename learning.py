@@ -16,7 +16,7 @@ def train_and_test_process():
     testds = testds.fillna('')
 
     # Wyjmujemy wszystkie nazwy kategorii
-    classes = list(trainds.columns.values[3:-2])
+    classes = list(trainds.columns.values[1:-2])
 
     # Vectorizer - przekształcenie danych tekstowych na wektory 600-składowe, z ngramami między 1, a 5 na podstawie TF-IDF
     vectorizer = TfidfVectorizer(max_features=1000, lowercase=True,
@@ -25,6 +25,8 @@ def train_and_test_process():
     x_train = vectorizer.fit_transform(trainds['text_dbpedied'])
     y_train = np.array([np.array(item).argmax()
                         for _, item in trainds[classes].iterrows()]).reshape(-1, 1)
+    
+    print(y_train)
 
     rfc = RandomForestClassifier()
     model = rfc.fit(x_train, y_train)
