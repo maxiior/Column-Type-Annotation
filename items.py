@@ -115,12 +115,12 @@ def get_items_classes():
             item_classes['class'] = None
         items_classes.append(item_classes)
 
-        tmp = []
-        for i in items_classes:
-            if i['class'] != None:
-                tmp.append(i)
+    tmp = []
+    for i in items_classes:
+        if i['class'] != None:
+            tmp.append(i)
 
-        items_classes = tmp
+    items_classes = tmp
 
     print("Pobieranie klas dla komórek: DONE")
 

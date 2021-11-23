@@ -1,12 +1,12 @@
 import pandas as pd
 
 def get_files_of_size(MAX_FILE_SIZE=1000000):
-    file_names = pd.read_csv("CTA_DBP_Round1_Targets.csv")
+    files = pd.read_csv("CTA_DBP_Round1_Targets.csv")
     definitive_files = pd.DataFrame(columns=['name', 'position'])
 
     table = pd.DataFrame()
 
-    for i in file_names.iloc:
+    for i in files.iloc:
         table = pd.read_csv('tables\\' + i[0] + ".csv")
 
         # Sprawdzamy, czy table ma mniej niż MAX_FILE_SIZE wierszy
