@@ -1,4 +1,4 @@
-CTRL_WIKI_BUS_largest_companies_by_revenue,1,http://dbpedia.org/ontology/company
+CTRL_WIKI_BUS_largest_companies_by_revenue,1,http://dbpedia.org/ontology/agent
 CTRL_WIKI_BUS_largest_companies_by_revenue,2,http://dbpedia.org/ontology/agent
 CTRL_WIKI_BUS_largest_companies_by_revenue,6,http://dbpedia.org/ontology/location
 CTRL_WIKI_BUS_largest_companies_by_revenue_NOISE2,2,http://dbpedia.org/ontology/musicgenre
@@ -9,7 +9,7 @@ CTRL_WIKI_BUS_largest_employers_NOISE2,0,http://dbpedia.org/ontology/agent
 CTRL_WIKI_BUS_largest_employers_NOISE2,3,http://dbpedia.org/ontology/location
 CTRL_WIKI_BUS_largest_private_and_semiprivate_employers,1,http://dbpedia.org/ontology/agent
 CTRL_WIKI_BUS_largest_private_and_semiprivate_employers,2,http://dbpedia.org/ontology/location
-CTRL_WIKI_BUS_largest_private_and_semiprivate_employers_NOISE2,1,http://dbpedia.org/ontology/location
+CTRL_WIKI_BUS_largest_private_and_semiprivate_employers_NOISE2,1,http://dbpedia.org/ontology/agent
 CTRL_WIKI_GEO_list_of_lakes_by_area,1,http://dbpedia.org/ontology/location
 CTRL_WIKI_GEO_list_of_lakes_by_area,2,http://dbpedia.org/ontology/location
 CTRL_WIKI_GEO_list_of_lakes_by_area_NOISE2,1,http://dbpedia.org/ontology/location
