@@ -4,7 +4,7 @@ CTRL_DBP_BUS_european_company_high_revenues,2,http://dbpedia.org/ontology/medici
 CTRL_DBP_BUS_european_company_high_revenues,3,http://dbpedia.org/ontology/medicine
 CTRL_DBP_BUS_european_company_high_revenues,5,http://dbpedia.org/ontology/country
 CTRL_DBP_BUS_european_company_high_revenues_NOISE2,2,http://dbpedia.org/ontology/medicine
-CTRL_DBP_BUS_european_company_high_revenues_NOISE2,3,http://dbpedia.org/ontology/capital
+CTRL_DBP_BUS_european_company_high_revenues_NOISE2,3,http://dbpedia.org/ontology/medicine
 CTRL_DBP_BUS_european_company_high_revenues_NOISE2,5,http://dbpedia.org/ontology/country
 CTRL_DBP_BUS_videogame_publishers,0,http://dbpedia.org/ontology/medicine
 CTRL_DBP_BUS_videogame_publishers,2,http://dbpedia.org/ontology/industry

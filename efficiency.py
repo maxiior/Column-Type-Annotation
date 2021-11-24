@@ -3,7 +3,7 @@ import pandas as pd
 
 
 def get_efficiency(show):
-    submission = pd.read_csv('model_submission.csv')
+    submission = pd.read_csv('model_submission.csv', header=None)
 
     all = 0
     for i in submission.iloc:
