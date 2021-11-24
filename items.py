@@ -4,10 +4,11 @@ import numpy as np
 import re
 import pathlib
 import time
-import os, ssl
+import os
+import ssl
 
 if (not os.environ.get('PYTHONHTTPSVERIFY', '') and
-getattr(ssl, '_create_unverified_context', None)):
+        getattr(ssl, '_create_unverified_context', None)):
     ssl._create_default_https_context = ssl._create_unverified_context
 
 TABLES_FOLDER_DIR = str(pathlib.Path(
@@ -17,6 +18,7 @@ TARGETS_FILE_NAME = str(pathlib.Path(
     __file__).parent.resolve()) + '\\definitive_files.csv'
 
 column_items = []
+
 
 def preporcess_item(word):
     word = re.sub(' \*? ?(A|a)lso.*', '', word)
@@ -67,7 +69,7 @@ def get_ontology_classes(item):
 
     respond.append([result["type"]["value"] for result in results["results"]["bindings"]
                     if 'http://dbpedia.org/ontology' in result["type"]["value"]])
-    time.sleep(0.3)
+    time.sleep(0.35)
 
     return respond
 
@@ -77,7 +79,7 @@ def get_size(column_items):
     for column in column_items:
         for _ in column['items']:
             q += 1
-    print('size: ', q, '(~', str(round(q*0.8/60)), 'min)')
+    print('size: ', q, '(~', str(round((30*len(column_items)/20 + q*0.5)/60)), 'min)')
 
 
 def get_items_classes():
@@ -100,7 +102,7 @@ def get_items_classes():
         item_classes['class'] = []
 
         q += 1
-        if q % 40 == 0:
+        if q % 20 == 0:
             time.sleep(30)
         print(q, '/', len(column_items))
 
@@ -124,6 +126,6 @@ def get_items_classes():
 
     print("Pobieranie klas dla komórek: DONE")
 
-    #Tworzymy DataFrame, w którym dla każdego itemu przypiszemy pobrane klasy
+    # Tworzymy DataFrame, w którym dla każdego itemu przypiszemy pobrane klasy
     items_classes_df = pd.DataFrame.from_dict(items_classes)
     items_classes_df.to_csv('items_classes.csv', index=False)

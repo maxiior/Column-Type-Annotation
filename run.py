@@ -5,7 +5,7 @@ from learning import train_and_test_process
 from efficiency import get_efficiency
 from items import get_items_classes
 
-get_files_of_size(200)
+get_files_of_size(100)
 get_items_classes()
 get_classes_for_files_columns()
 map_items()
