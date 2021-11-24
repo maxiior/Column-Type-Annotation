@@ -88,7 +88,7 @@ def get_items_classes():
     for i in df_targets.iloc:
         get_column_items(i)
 
-    print("Wyjmowanie komórek z kolumn: DONE")
+    print("get_items_classes | Wyjmowanie komórek z kolumn: DONE")
 
     items_classes = []
 
@@ -124,8 +124,10 @@ def get_items_classes():
 
     items_classes = tmp
 
-    print("Pobieranie klas dla komórek: DONE")
+    print("get_items_classes | Pobieranie klas dla komórek: DONE")
 
     # Tworzymy DataFrame, w którym dla każdego itemu przypiszemy pobrane klasy
     items_classes_df = pd.DataFrame.from_dict(items_classes)
     items_classes_df.to_csv('items_classes.csv', index=False)
+
+    print("get_items_classes | Utworzenie pliku items_classes.csv: DONE")

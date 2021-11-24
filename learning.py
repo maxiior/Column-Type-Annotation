@@ -17,9 +17,7 @@ def train_and_test_process():
     testds = testds.fillna('')
 
     # Wyjmujemy wszystkie nazwy kategorii
-    classes = list(trainds.columns.values[2:-1])
-
-    print(classes)
+    classes = list(trainds.columns.values[2:-2])
 
     # Vectorizer - przekształcenie danych tekstowych na wektory 600-składowe, z ngramami między 1, a 5 na podstawie TF-IDF
     vectorizer = TfidfVectorizer(max_features=1000, lowercase=True,
@@ -31,6 +29,8 @@ def train_and_test_process():
 
     rfc = RandomForestClassifier()
     model = rfc.fit(x_train, y_train)
+
+    print("train_and_test_process | Wyuczenie modelu: DONE")
 
     owngtcsvs = set()
     for i in range(len(testds)):
@@ -52,3 +52,6 @@ def train_and_test_process():
                 pred
             ]
             csvwriter.writerow(line)
+
+    print("train_and_test_process | Wykonanie predykcji na zbiorze testowym: DONE")
+    print("train_and_test_process | Utworzenie pliku model_submission.csv: DONE")

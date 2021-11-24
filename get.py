@@ -16,6 +16,8 @@ def get_files_of_size(MAX_FILE_SIZE=1000000):
                 {'name': i.iloc[0], 'position': i.iloc[1]}, ignore_index=True)
 
     definitive_files.to_csv("definitive_files.csv", index=False)
+    print(f'get_files_of_size | Wybieranie plików o {MAX_FILE_SIZE} wierszach: DONE')
+    print(f'get_files_of_size | Utworzenie pliku definitive_files.csv: DONE')
 
 
 def get_classes_for_files_columns():
@@ -23,7 +25,7 @@ def get_classes_for_files_columns():
 
     classes_that_work = [i['class'].lower() for i in items_classes.iloc]
 
-    print('Liczba wierszy definitive_files.csv: ',
+    print('get_classes_for_files_columns | Liczba wierszy items_classes.csv: ',
           items_classes['name'].size)
 
     df = pd.DataFrame()
@@ -50,3 +52,6 @@ def get_classes_for_files_columns():
 
         df = df.append(row, ignore_index=True)
     df.to_csv("dataset.csv", index=False)
+
+    print('get_classes_for_files_columns | Przypisanie elementów kolumn: DONE')
+    print('get_classes_for_files_columns | Utworzenie pliku dataset.csv: DONE')
