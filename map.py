@@ -23,3 +23,5 @@ def map_items():
     data["text_dbpedied"] = data["text"].apply(
         lambda x: " ; ".join(process_data(x)))
     data.to_csv("dataset_dbpedied.csv", index=False)
+    print("map_items | Mapowanie elementów kolumn: DONE")
+    print("map_items | Utworzenie pliku dataset_dbpedied.csv: DONE")

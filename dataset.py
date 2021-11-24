@@ -3,12 +3,12 @@ import numpy as np
 from collections import Counter
 
 
-def create_train_test_dataset():
+def create_train_test_dataset(size):
     df = pd.read_csv("dataset_dbpedied.csv")
     df = df.drop_duplicates(subset=["text"])
     df = df.drop(["text"], axis=1)
 
-    classes = list(df.columns.values[3:-2])
+    classes = list(df.columns.values[1:-2])
     schedule = Counter()
 
     # Ustalamy rozkład przynajleżności do poszczególnych klas
@@ -34,7 +34,7 @@ def create_train_test_dataset():
     for cc, row in df.iterrows():
         c = classes[np.array(row[classes]).argmax()]
         if row[c] == 1:
-            if row_test_c[c] < int(0.3*schedule[c])+1:
+            if row_test_c[c] < int(size*schedule[c])+1:
                 row_test_c[c] += 1
                 row_test.append(cc)
 
@@ -53,3 +53,7 @@ def create_train_test_dataset():
 
     test.to_csv("test_p.csv", index=False)
     train.to_csv("train_p.csv", index=False)
+
+    print("create_train_test_dataset | Utworzenie zbioru treningowego i testowego: DONE")
+    print("create_train_test_dataset | Utworzenie pliku test_p.csv: DONE")
+    print("create_train_test_dataset | Utworzenie pliku train_p.csv: DONE")

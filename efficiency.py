@@ -2,7 +2,7 @@ from re import sub
 import pandas as pd
 
 
-def get_efficiency():
+def get_efficiency(show):
     submission = pd.read_csv('model_submission.csv')
 
     all = 0
@@ -20,9 +20,11 @@ def get_efficiency():
             'http://dbpedia.org/ontology/', '').lower()]
 
         if a[0] == a[1]:
-            print(i[0], i[1], a, "TRUE")
+            if show:
+                print(i[0], i[1], a, "TRUE")
             correct += 1
         else:
-            print(i[0], i[1], a, "FALSE")
+            if show:
+                print(i[0], i[1], a, "FALSE")
 
     print(correct, "/", all, round(correct/all, 2))

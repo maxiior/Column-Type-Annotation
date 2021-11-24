@@ -30,7 +30,7 @@ CTRL_DBP_SPO_F1_drivers,1,http://dbpedia.org/ontology/medicine
 CTRL_DBP_SPO_NBA_players,2,http://dbpedia.org/ontology/team
 CTRL_DBP_SPO_NBA_players_NOISE2,2,http://dbpedia.org/ontology/team
 CTRL_DBP_SPO_goalkeepers,1,http://dbpedia.org/ontology/country
-CTRL_DBP_SPO_goalkeepers,2,http://dbpedia.org/ontology/team
+CTRL_DBP_SPO_goalkeepers,2,http://dbpedia.org/ontology/medicine
 CTRL_DBP_SPO_goalkeepers_NOISE2,1,http://dbpedia.org/ontology/country
 CTRL_WIKI_BUS_largest_companies_by_revenue,1,http://dbpedia.org/ontology/name
 CTRL_WIKI_BUS_largest_companies_by_revenue,2,http://dbpedia.org/ontology/industry
