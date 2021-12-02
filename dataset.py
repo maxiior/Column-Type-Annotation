@@ -8,7 +8,12 @@ def create_train_test_dataset(size):
     df = df.drop_duplicates(subset=["text"])
     df = df.drop(["text"], axis=1)
 
-    classes = list(df.columns.values[1:-2])
+    classes = []
+
+    for i in df.columns:
+        if i.find("http://dbpedia.org/ontology/") != -1:
+            classes.append(i)
+
     schedule = Counter()
 
     # Ustalamy rozkład przynajleżności do poszczególnych klas

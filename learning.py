@@ -17,7 +17,11 @@ def train_and_test_process():
     testds = testds.fillna('')
 
     # Wyjmujemy wszystkie nazwy kategorii
-    classes = list(trainds.columns.values[1:-2])
+    classes = []
+
+    for i in trainds.columns:
+        if i.find("http://dbpedia.org/ontology/") != -1:
+            classes.append(i)
 
     # Vectorizer - przekształcenie danych tekstowych na wektory 600-składowe, z ngramami między 1, a 5 na podstawie TF-IDF
     vectorizer = TfidfVectorizer(max_features=1000, lowercase=True,
